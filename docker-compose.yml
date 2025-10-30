@@ -24,11 +24,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
       # Mapea tu script de datos para que Mongo lo ejecute al iniciar
+      # El ":ro" al final significa "read-only" (solo lectura), buena práctica
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       # Guarda los datos de Mongo en un volumen para que no se borren
       - mongo-data:/data/db
 
 volumes:
-  mongo-data:
-
-
+  mongo-data: # Define el volumen nombrado
