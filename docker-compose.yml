@@ -10,6 +10,13 @@ services:
     depends_on:
       - web
 
+# Servicio para la API escrita en Go con Gin
+  go-service:
+    build:
+      context: ./go
+    ports:
+      - "8082:8082"
+
   # Servicio para la aplicación web Spring Boot
   web:
     build:

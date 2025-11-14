@@ -1,6 +1,7 @@
 module proyecto/go
 
-go 1.25.4
+go 1.22.5
+
 
 require (
 	github.com/bytedance/gopkg v0.1.3 // indirect
