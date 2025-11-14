@@ -19,7 +19,7 @@ func main() {
 	})
 
 	// 3. Inicia el servidor
-	// Spring (demo) usa :8080
+    // Spring (SpringBoot) usa :8080
 	// Vue (frontend) usa :5173
 	// Go usará :8082
 	r.Run(":8082") // Escucha en el puerto 8082

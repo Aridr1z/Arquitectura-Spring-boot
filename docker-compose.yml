@@ -20,7 +20,7 @@ services:
   # Servicio para la aplicación web Spring Boot
   web:
     build:
-      context: ./demo
+      context: ./SpringBoot
       dockerfile: dockerfile
     ports:
       - "8080:8080"
@@ -40,7 +40,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
-      - ./demo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./SpringBoot/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - mongo-data:/data/db
 
 volumes:
