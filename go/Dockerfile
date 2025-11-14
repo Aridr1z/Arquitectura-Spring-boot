@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 
 # Etapa de compilación: compila el binario de Go
-FROM golang:1.22-alpine AS builder
+# CAMBIO AQUÍ: Actualizado de 1.22 a 1.23 para que coincida con tus dependencias
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
