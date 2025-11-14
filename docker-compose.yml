@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Servicio para la aplicación frontend construida con Vite
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - web
+
+  # Servicio para la aplicación web Spring Boot
+  web:
+    build:
+      context: ./demo
+      dockerfile: dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # --- ¡LA LÍNEA CLAVE! ---
+      # Activa el perfil "dev" para que Spring use el archivo application-dev.properties
+      - SPRING_PROFILES_ACTIVE=dev
+    depends_on:
+      - db
+
+  # Servicio para la base de datos MongoDB
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./demo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
