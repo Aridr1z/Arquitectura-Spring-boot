@@ -12,9 +12,9 @@ Proyecto de ejemplo para un backend de e-commerce construido con Spring Boot y M
 
 ## Ejecución con Docker Compose
 
-1. Sitúate en el directorio `demo/`:
+1. Sitúate en el directorio `SpringBoot/`:
    ```bash
-   cd demo
+   cd SpringBoot
    ```
 2. Construye y levanta los servicios (aplicación y MongoDB):
    ```bash
@@ -37,7 +37,7 @@ Proyecto de ejemplo para un backend de e-commerce construido con Spring Boot y M
 Si prefieres ejecutar la aplicación sin contenedores:
 
 ```bash
-cd demo
+cd SpringBoot
 ./mvnw spring-boot:run
 ```
 
@@ -60,7 +60,7 @@ El archivo `init-mongo.js` crea:
 - Una orden (`ord_101`) ligada al usuario anterior.
 - Un pago (`pay_1001`) asociado a la orden.
 
-## Estructura principal del código Java (`src/main/java/com/example/demo`)
+## Estructura principal del código Java (`SpringBoot/src/main/java/com/example/demo`)
 
 ### Clase de arranque
 - **`EcommerceApplication.java`**: Punto de entrada de Spring Boot. Habilita el escaneo de repositorios MongoDB en `com.example.demo.repositories` y arranca el contexto de la aplicación.
