@@ -12,4 +12,4 @@ COPY server ./server
 ENV GRPC_PORT=50051
 EXPOSE 50051
 
-CMD ["python", "server/app.py"]
+CMD ["python", "-u", "server/app.py"]

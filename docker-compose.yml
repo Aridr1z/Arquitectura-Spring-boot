@@ -10,7 +10,7 @@ services:
     depends_on:
       - web
 
-# Servicio para la API escrita en Go con Gin
+  # Servicio para la API escrita en Go con Gin
   go-service:
     build:
       context: ./go

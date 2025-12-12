@@ -12,25 +12,26 @@ Proyecto de ejemplo para un backend de e-commerce construido con Spring Boot y M
 
 ## Ejecución con Docker Compose
 
-1. Sitúate en el directorio `demo/`:
+1. En la raíz del repo ejecuta:
    ```bash
-   cd demo
+   docker compose up -d --build
    ```
-2. Construye y levanta los servicios (aplicación y MongoDB):
+   Levanta los servicios frontend, API en Go, Spring Boot, MongoDB y el servidor gRPC de Python.
+2. Verifica que los contenedores estén arriba:
    ```bash
-   docker compose up --build
+   docker compose ps
    ```
-3. Espera a que la aplicación muestre el mensaje `Started EcommerceApplication`. 
-4. Los endpoints REST quedarán disponibles en `http://localhost:8080/api/...`.
-5. Los datos iniciales se cargan automáticamente gracias al script `init-mongo.js`. Puedes inspeccionarlos conectándote a MongoDB en `mongodb://root:root@localhost:27017` (base de datos `ecommerce`).
-6. Cuando termines, detén los servicios:
+3. Confirma que el servidor gRPC está escuchando y sin errores:
+   ```bash
+   docker logs python-grpc-1
+   ```
+   Si el nombre del contenedor difiere, revisa el mostrado por `docker compose ps`.
+4. Cuando termines, detén los servicios:
    ```bash
    docker compose down
    ```
 
-> El archivo `docker-compose.yml` define dos servicios:
-> - `web`: Construye la imagen usando el `dockerfile` del proyecto, expone el puerto 8080 y activa el perfil `dev` de Spring.
-> - `db`: Usa la imagen oficial de MongoDB, crea el usuario `root` con contraseña `root`, ejecuta `init-mongo.js` y persiste los datos en el volumen `mongo-data`.
+> El archivo `docker-compose.yml` define los servicios `web` (Spring Boot), `frontend` (Vite), `go-service`, `db` (Mongo) y `python-grpc` (gRPC Python conectado a MongoDB `db`).
 
 ## Ejecución local con Maven
 
@@ -59,6 +60,14 @@ El archivo `init-mongo.js` crea:
 - Dos productos (`prd_1`, `prd_2`).
 - Una orden (`ord_101`) ligada al usuario anterior.
 - Un pago (`pay_1001`) asociado a la orden.
+
+## Probar el servidor gRPC en Postman
+
+- Endpoint: `grpc://localhost:50051`
+- Importa el archivo `python/proto/ecommerce.proto`.
+- Métodos disponibles:
+  - `ecommerce.Greeter/SayHello`: envía `{ "name": "Ada" }` y espera `{ "message": "Hello, Ada!" }`.
+  - `ecommerce.ProductService/*`: CRUD completo de productos respaldado por la colección `products` en MongoDB.
 
 ## Estructura principal del código Java (`src/main/java/com/example/demo`)
 

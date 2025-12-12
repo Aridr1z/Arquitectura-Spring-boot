@@ -123,17 +123,26 @@ def serve():
     grpc_port = os.getenv("GRPC_PORT", "50051")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-    database = get_database()
-    repository = ProductRepository(database.get_collection("products"))
+    try:
+        database = get_database()
+        repository = ProductRepository(database.get_collection("products"))
+        logger.info("Connected to MongoDB at %s:%s", os.getenv("DB_HOST", "db"), os.getenv("DB_PORT", "27017"))
+    except Exception as exc:  # pragma: no cover - defensive logging for runtime environments
+        logger.exception("Failed to initialize database connection: %s", exc)
+        raise
 
     ecommerce_pb2_grpc.add_GreeterServicer_to_server(GreeterService(), server)
     ecommerce_pb2_grpc.add_ProductServiceServicer_to_server(ProductService(repository), server)
 
-    server.add_insecure_port(f"[::]:{grpc_port}")
+    server.add_insecure_port(f"0.0.0.0:{grpc_port}")
     logger.info("gRPC server listening on port %s", grpc_port)
     server.start()
     server.wait_for_termination()
 
 
 if __name__ == "__main__":
-    serve()
+    try:
+        serve()
+    except Exception:
+        logger.exception("gRPC server terminated due to an unrecoverable error")
+        raise
