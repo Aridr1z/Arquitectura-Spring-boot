@@ -33,6 +33,44 @@ Proyecto de ejemplo para un backend de e-commerce construido con Spring Boot y M
 
 > El archivo `docker-compose.yml` define los servicios `web` (Spring Boot), `frontend` (Vite), `go-service`, `db` (Mongo) y `python-grpc` (gRPC Python conectado a MongoDB `db`).
 
+### Servicio gRPC en Python
+
+El servicio `python-grpc` expone un Greeter y un CRUD de productos usando la misma base de datos MongoDB que Spring Boot.
+
+- Código fuente: [`python/server/app.py`](python/server/app.py)
+- Proto: [`python/proto/ecommerce.proto`](python/proto/ecommerce.proto)
+- Puerto: `50051` (puede cambiarse con la variable `GRPC_PORT`).
+- Variables de conexión a Mongo (con valores por defecto de `docker-compose.yml`):
+  - `DB_HOST=db`
+  - `DB_PORT=27017`
+  - `DB_USER=root`
+  - `DB_PASS=root`
+  - `DB_NAME=ecommerce`
+
+#### Ejecutar solo el servicio de Python
+
+```bash
+cd python
+docker build -t python-grpc-service .
+docker run --rm -p 50051:50051 \
+  -e DB_HOST=db -e DB_PORT=27017 -e DB_USER=root -e DB_PASS=root -e DB_NAME=ecommerce \
+  python-grpc-service
+```
+
+Si corres todo el stack con `docker compose up`, no necesitas construir la imagen manualmente: Compose usa el `Dockerfile` de esta carpeta.
+
+#### Probar el gRPC (Postman o cliente gRPC)
+
+1. Usa el endpoint `grpc://localhost:50051`.
+2. Importa [`python/proto/ecommerce.proto`](python/proto/ecommerce.proto) en Postman/Insomnia.
+3. Prueba el Greeter con el método `ecommerce.Greeter/SayHello` enviando `{ "name": "Ada" }`.
+4. Prueba el CRUD de productos (`ecommerce.ProductService`):
+   - **CreateProduct**: envía un `product` con `seller_id`, `type`, `title`, `price` y `details` (opcional). Si no envías `id`, se genera un UUID.
+   - **GetProductById**: consulta cualquier documento de la colección `products` (`prd_1`, `prd_2` vienen en los datos iniciales).
+   - **UpdateProduct**, **DeleteProduct**, **ListProducts**: cubren el resto del CRUD y devuelven los códigos de error estándar (`INVALID_ARGUMENT`, `NOT_FOUND`, `ALREADY_EXISTS`, `INTERNAL`).
+
+Con Compose, los datos iniciales se cargan desde `demo/init-mongo.js` y son compartidos por Spring Boot y Python.
+
 ## Ejecución local con Maven
 
 Si prefieres ejecutar la aplicación sin contenedores:
