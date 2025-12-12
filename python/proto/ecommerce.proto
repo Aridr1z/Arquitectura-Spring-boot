@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package ecommerce;
+
+// Greeter service for connectivity checks
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+
+// Product data model mirroring the Spring Boot Mongo collection
+message Product {
+  string id = 1;
+  string seller_id = 2;
+  string type = 3;
+  string title = 4;
+  double price = 5;
+  map<string, string> details = 6;
+  string created_at = 7; // ISO-8601 timestamp
+}
+
+message CreateProductRequest {
+  Product product = 1;
+}
+
+message ProductResponse {
+  Product product = 1;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message UpdateProductRequest {
+  Product product = 1;
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+message DeleteProductResponse {
+  bool deleted = 1;
+}
+
+message ListProductsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
+}
+
+service Greeter {
+  rpc SayHello(HelloRequest) returns (HelloReply);
+}
+
+service ProductService {
+  rpc CreateProduct(CreateProductRequest) returns (ProductResponse);
+  rpc GetProductById(GetProductRequest) returns (ProductResponse);
+  rpc UpdateProduct(UpdateProductRequest) returns (ProductResponse);
+  rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse);
+}

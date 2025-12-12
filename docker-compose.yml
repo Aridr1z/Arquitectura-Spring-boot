@@ -43,5 +43,20 @@ services:
       - ./demo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - mongo-data:/data/db
 
+  python-grpc:
+    build:
+      context: ./python
+    ports:
+      - "50051:50051"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=27017
+      - DB_USER=root
+      - DB_PASS=root
+      - DB_NAME=ecommerce
+      - GRPC_PORT=50051
+    depends_on:
+      - db
+
 volumes:
   mongo-data:
