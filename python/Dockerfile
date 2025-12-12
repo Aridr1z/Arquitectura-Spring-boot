@@ -9,7 +9,9 @@ COPY proto ./proto
 COPY db ./db
 COPY server ./server
 
+ENV PYTHONPATH=/app
 ENV GRPC_PORT=50051
+
 EXPOSE 50051
 
 CMD ["python", "-u", "server/app.py"]
